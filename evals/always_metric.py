@@ -17,7 +17,7 @@ SYSTEM_PROMPTS = [
         "Don't add notes about measurements."
     ),
 ]
-RUNS = 3
+RUNS = 10
 
 TEST_INPUTS = [
     "give me a cake recipe",
