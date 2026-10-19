@@ -1,15 +1,12 @@
-import anthropic
-import os
-from dotenv import load_dotenv
 from rich import print_json
 from enums.model import Model
 from anthropic.types import MessageParam
 from typing import cast
 from anthropic.types import TextBlock
+from anthropic_client import AnthropicClient
 
-load_dotenv() 
 
-client = anthropic.Anthropic(api_key=os.getenv("API_KEY"))
+client = AnthropicClient()
 
 messages: list[MessageParam] = []
 messages.append(MessageParam(role='user', content="what is the answer to life, the universe and everything"))
