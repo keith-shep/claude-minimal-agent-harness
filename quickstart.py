@@ -11,14 +11,9 @@ client = AnthropicClient()
 console = Console()
 messages: list[MessageParam] = []
 
+system_prompt = console.input("[bold yellow]system (leave blank for no):[/] ")
+user_input = console.input("[bold cyan]user:[/] ")
 while True:
-    system_prompt = console.input(
-        "[bold yellow]system (leave blank for no prompt):[/] "
-    )
-    messages.append(MessageParam(role="user", content=system_prompt))
-
-    user_input = console.input("[bold cyan]user:[/] ")
-
     messages.append(MessageParam(role="user", content=user_input))
 
     response = client.run_inference(messages)
