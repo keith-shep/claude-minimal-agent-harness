@@ -1,8 +1,9 @@
-import anthropic
 import os
+
+import anthropic
+from anthropic.types import Message, MessageParam
 from dotenv import load_dotenv
-from anthropic.types import MessageParam
-from anthropic.types import Message
+
 from enums.model import Model
 
 load_dotenv() 

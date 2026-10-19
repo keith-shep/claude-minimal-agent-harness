@@ -1,7 +1,8 @@
-from rich import print_json
-from anthropic.types import MessageParam
 from typing import cast
-from anthropic.types import TextBlock
+
+from anthropic.types import MessageParam, TextBlock
+from rich import print_json
+
 from anthropic_client import AnthropicClient
 
 client = AnthropicClient()
