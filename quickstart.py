@@ -25,9 +25,11 @@ response = client.messages.create(
 )
 
 response_message = cast(TextBlock, response.content[0]).text
-# response_message = response.content[0].text
 
-messages.extend([{"role":'assistant', "content":response_message}, {"role": 'user', "content": "thanks for that"}])
+messages.extend([
+  MessageParam(role='assistant', content=response_message),
+  MessageParam(role='user', content="thanks for that"),
+])
 
 
 response = client.messages.create(
