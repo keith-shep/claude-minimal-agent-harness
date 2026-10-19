@@ -1,6 +1,7 @@
 import anthropic
 import os
 from dotenv import load_dotenv
+from rich import print_json
 
 load_dotenv() 
 
@@ -17,7 +18,7 @@ message = client.messages.create(
     ],
 )
 
-print(message.model_dump_json(indent=2, exclude_none=True))
+print_json(message.model_dump_json(indent=2, exclude_none=True))
 
 for block in message.content:
     if block.type == "text":
