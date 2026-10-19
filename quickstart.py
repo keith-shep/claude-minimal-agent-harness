@@ -4,18 +4,18 @@ from rich.markdown import Markdown
 
 from anthropic_client import AnthropicClient
 
+console = Console()
+system_prompt = console.input("[bold yellow]system (leave blank for no):[/] ")
 client = AnthropicClient()
 
-console = Console()
+
 messages: list[MessageParam] = []
 
-system_prompt = console.input("[bold yellow]system (leave blank for no):[/] ")
-messages.append(MessageParam(role="user", content=system_prompt))
 while True:
     user_input = console.input("[bold cyan]user:[/] ")
     messages.append(MessageParam(role="user", content=user_input))
 
-    response = client.run_inference(messages)
+    response = client.run_inference(messages, system_prompt)
 
     response_message = "".join(
         block.text for block in response.content if block.type == "text"

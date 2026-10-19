@@ -10,12 +10,15 @@ load_dotenv()
 
 
 class AnthropicClient(anthropic.Anthropic):
-    def __init__(self) -> None:
+    def __init__(self, system_prompt: str = "") -> None:
         super().__init__(api_key=os.getenv("API_KEY"))
 
-    def run_inference(self, messages: list[MessageParam]) -> Message:
+    def run_inference(
+        self, messages: list[MessageParam], system_prompt: str = ""
+    ) -> Message:
         return self.messages.create(
             model=Model.HAIKU,
             max_tokens=1000,
             messages=messages,
+            system=system_prompt,
         )
