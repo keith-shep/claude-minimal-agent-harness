@@ -3,13 +3,14 @@ import os
 from dotenv import load_dotenv
 from rich import print_json
 from enums.role import Role
+from enums.model import Model
 
 load_dotenv() 
 
 client = anthropic.Anthropic(api_key=os.getenv("API_KEY"))
 
 message = client.messages.create(
-    model="claude-haiku-5-5",
+    model=Model.HAIKU,
     max_tokens=1000,
     messages=[
         {
