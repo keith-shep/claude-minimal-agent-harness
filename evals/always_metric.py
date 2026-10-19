@@ -1,10 +1,11 @@
 import re
 
 from anthropic.types import MessageParam
+from rich.console import Console
 
 from anthropic_client import AnthropicClient
 
-SYSTEM_PROMPT = "use metric units"
+SYSTEM_PROMPT = "use metric units. never use imperial units"
 RUNS = 3
 
 TEST_INPUTS = [
@@ -33,7 +34,7 @@ def find_leaks(reply: str) -> list[str]:
 
 passed = 0
 total = 0
-
+console = Console()
 for user_input in TEST_INPUTS:
     for run in range(1, RUNS + 1):
         reply = get_reply(user_input)
@@ -41,7 +42,7 @@ for user_input in TEST_INPUTS:
         total += 1
         if not leaks:
             passed += 1
-        status = "PASS" if not leaks else f"FAIL {leaks}"
-        print(f"[{run}/{RUNS}] {status}  {user_input}")
+        status = "[bold green]PASS[/]" if not leaks else f"[bold red]FAIL {leaks}[/]"
+        console.print(f"\\[{run}/{RUNS}] {status}  {user_input}")
 
 print(f"\nscore: {passed}/{total}")
