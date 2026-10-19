@@ -1,8 +1,15 @@
+import argparse
+
 from anthropic.types import MessageParam
+from rich import print_json
 from rich.console import Console
 from rich.markdown import Markdown
 
 from anthropic_client import AnthropicClient
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--debug", action="store_true", help="print full API responses")
+args = parser.parse_args()
 
 console = Console()
 system_prompt = console.input("[bold yellow]system (leave blank for no):[/] ")
@@ -26,4 +33,5 @@ while True:
     console.print(Markdown(response_message), width=console.width - len(label))
     console.print()
 
-    # print_json(response.model_dump_json(indent=2, exclude_none=True))
+    if args.debug:
+        print_json(response.model_dump_json(indent=2, exclude_none=True))
