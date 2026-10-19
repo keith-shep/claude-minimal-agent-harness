@@ -11,15 +11,15 @@ load_dotenv()
 
 
 class AnthropicClient(anthropic.Anthropic):
-    def __init__(self) -> None:
+    def __init__(self, requests_ttys: str, response_ttys: str) -> None:
         super().__init__(api_key=os.getenv("API_KEY"))
+        self.requests_ttys: str = requests_ttys
+        self.responses_ttys: str = response_ttys
 
     def run_inference(
         self,
         messages: list[MessageParam],
         system_prompt: str = "",
-        requests_ttys: str = "",
-        responses_ttys: str = "",
     ) -> Message:
 
         response = self.messages.create(
@@ -28,16 +28,16 @@ class AnthropicClient(anthropic.Anthropic):
             messages=messages,
             system=system_prompt,
         )
-        if requests_ttys:
-            with open(requests_ttys, "w") as tty:
+        if self.requests_ttys:
+            with open(self.requests_ttys, "w") as tty:
                 console = Console(file=tty, force_terminal=True)
                 console.rule("request")
                 console.print_json(
                     data={"system": system_prompt, "messages": messages}, default=str
                 )
 
-        if responses_ttys:
-            with open(responses_ttys, "w") as tty:
+        if self.responses_ttys:
+            with open(self.responses_ttys, "w") as tty:
                 console = Console(file=tty, force_terminal=True)
                 console.rule("response")
                 console.print_json(response.model_dump_json(exclude_none=True))

@@ -15,13 +15,14 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
+client = AnthropicClient(args.requests_tty, args.responses_tty)
+
 console = Console()
 console.print()
 console.print("[green]Setting up...")
 console.print("[green]Press Ctrl+C to end")
 try:
     system_prompt = console.input("[bold yellow]system prompt (enter for none):[/] ")
-    client = AnthropicClient()
 
     messages: list[MessageParam] = []
 
@@ -30,7 +31,8 @@ try:
         messages.append(MessageParam(role="user", content=user_input))
 
         response = client.run_inference(
-            messages, system_prompt, args.requests_tty, args.responses_tty
+            messages,
+            system_prompt,
         )
 
         response_message = "".join(
