@@ -2,10 +2,11 @@ import re
 
 from anthropic.types import MessageParam
 from rich.console import Console
+from rich.markup import escape
 
 from anthropic_client import AnthropicClient
 
-SYSTEM_PROMPT = "use metric units. never use imperial units"
+SYSTEM_PROMPT = "use metric units. never use imperial units, this includes tablespoons and teaspoons. dont add a note on measurements"
 RUNS = 3
 
 TEST_INPUTS = [
@@ -42,6 +43,13 @@ for user_input in TEST_INPUTS:
         total += 1
         if not leaks:
             passed += 1
+        else:
+            for line in reply.splitlines():
+                if IMPERIAL.search(line):
+                    highlighted = IMPERIAL.sub(
+                        lambda m: f"[bold red]{m.group(0)}[/]", escape(line)
+                    )
+                    console.print(f"    [dim]>[/] {highlighted}")
         status = "[bold green]PASS[/]" if not leaks else f"[bold red]FAIL {leaks}[/]"
         console.print(f"\\[{run}/{RUNS}] {status}  {user_input}")
 
