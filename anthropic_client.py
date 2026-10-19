@@ -5,6 +5,7 @@ from anthropic.types import Message, MessageParam
 from dotenv import load_dotenv
 from rich.console import Console
 
+from effort import Effort
 from enums.model import Model
 
 load_dotenv()
@@ -20,6 +21,7 @@ class AnthropicClient(anthropic.Anthropic):
         self,
         messages: list[MessageParam],
         system_prompt: str = "",
+        effort_level: Effort = "medium",
     ) -> Message:
 
         response = self.messages.create(
@@ -27,6 +29,7 @@ class AnthropicClient(anthropic.Anthropic):
             max_tokens=1000,
             messages=messages,
             system=system_prompt,
+            output_config={"effort": effort_level},
         )
         if self.requests_ttys:
             with open(self.requests_ttys, "w") as tty:
