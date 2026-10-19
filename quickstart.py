@@ -2,9 +2,10 @@ import anthropic
 import os
 from dotenv import load_dotenv
 from rich import print_json
-from enums.role import Role
 from enums.model import Model
 from anthropic.types import MessageParam
+from typing import cast
+from anthropic.types import TextBlock
 
 load_dotenv() 
 
@@ -23,7 +24,8 @@ response = client.messages.create(
     messages=messages,
 )
 
-response_message = response.content[0].text
+response_message = cast(TextBlock, response.content[0]).text
+# response_message = response.content[0].text
 
 messages.extend([{"role":'assistant', "content":response_message}, {"role": 'user', "content": "thanks for that"}])
 
