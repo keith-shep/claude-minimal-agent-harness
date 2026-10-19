@@ -6,16 +6,13 @@ from anthropic.types import TextBlock
 from anthropic_client import AnthropicClient
 
 
+
 client = AnthropicClient()
 
 messages: list[MessageParam] = []
 messages.append(MessageParam(role='user', content="what is the answer to life, the universe and everything"))
 
-response = client.messages.create(
-    model=Model.HAIKU,
-    max_tokens=1000,
-    messages=messages,
-)
+response = client.run_inference(messages)
 
 response_message = cast(TextBlock, response.content[0]).text
 
@@ -25,10 +22,6 @@ messages.extend([
 ])
 
 
-response = client.messages.create(
-    model=Model.HAIKU,
-    max_tokens=1000,
-    messages=messages,
-)
+response = client.run_inference(messages)
 
 print_json(response.model_dump_json(indent=2, exclude_none=True))
