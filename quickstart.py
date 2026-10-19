@@ -10,6 +10,7 @@ console = Console()
 messages: list[MessageParam] = []
 
 system_prompt = console.input("[bold yellow]system (leave blank for no):[/] ")
+messages.append(MessageParam(role="user", content=system_prompt))
 while True:
     user_input = console.input("[bold cyan]user:[/] ")
     messages.append(MessageParam(role="user", content=user_input))
