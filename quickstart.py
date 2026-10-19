@@ -20,7 +20,7 @@ while True:
 
     response_message = cast(TextBlock, response.content[0]).text
     messages.append(MessageParam(role="assistant", content=response_message))
-    console.print("[bold green]assistant:[/]", end="")
+    console.print("[bold green]assistant: [/]", end="")
     label = "assistant: "
     console.print(Markdown(response_message), width=console.width - len(label))
     console.print()
