@@ -20,6 +20,6 @@ message = client.messages.create(
 
 print_json(message.model_dump_json(indent=2, exclude_none=True))
 
-for block in message.content:
-    if block.type == "text":
-        print(block.text)
+# for block in message.content:
+#     if block.type == "text":
+#         print(block.text)
