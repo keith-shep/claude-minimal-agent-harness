@@ -8,7 +8,10 @@ from anthropic_client import AnthropicClient
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
-    "--debug-tty", help="terminal device for debug output, e.g. /dev/ttys008"
+    "--requests-tty", help="terminal device for debug output, e.g. /dev/ttys008"
+)
+parser.add_argument(
+    "--responses-tty", help="terminal device for debug output, e.g. /dev/ttys009"
 )
 args = parser.parse_args()
 
@@ -23,7 +26,9 @@ while True:
     user_input = console.input("[bold cyan]user:[/] ")
     messages.append(MessageParam(role="user", content=user_input))
 
-    response = client.run_inference(messages, system_prompt, args.debug_tty)
+    response = client.run_inference(
+        messages, system_prompt, args.requests_tty, args.responses_tty
+    )
 
     response_message = "".join(
         block.text for block in response.content if block.type == "text"
