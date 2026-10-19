@@ -1,3 +1,4 @@
 .env
 *cpython*
 *pycache*
+*venv*
