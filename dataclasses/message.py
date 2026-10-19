@@ -1,3 +1,5 @@
+#based on anthropics MessageParam
+
 from typing import TypedDict
 from enums.role import Role
 
