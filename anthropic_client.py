@@ -10,7 +10,7 @@ load_dotenv()
 
 
 class AnthropicClient(anthropic.Anthropic):
-    def __init__(self, system_prompt: str = "") -> None:
+    def __init__(self) -> None:
         super().__init__(api_key=os.getenv("API_KEY"))
 
     def run_inference(
