@@ -4,14 +4,15 @@ from dotenv import load_dotenv
 from rich import print_json
 from enums.role import Role
 from enums.model import Model
+from anthropic.types import MessageParam
 
 load_dotenv() 
 
 client = anthropic.Anthropic(api_key=os.getenv("API_KEY"))
 
-messages = [
+messages: list[MessageParam] = [
     {
-        "role": Role.USER,
+        "role": 'user',
         "content": "what is the answer to life, the universe and everything",
     }
 ]
@@ -24,7 +25,7 @@ response = client.messages.create(
 
 response_message = response.content[0].text
 
-messages.extend([{"role":Role.ASSISTANT, "content":response_message}, {"role": Role.USER, "content": "thanks for that"}])
+messages.extend([{"role":'assistant', "content":response_message}, {"role": 'user', "content": "thanks for that"}])
 
 
 response = client.messages.create(
