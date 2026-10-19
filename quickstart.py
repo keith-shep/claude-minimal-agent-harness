@@ -28,6 +28,8 @@ try:
 
     while True:
         user_input = console.input("[bold cyan]user:[/] ")
+        if not user_input:
+            continue
         messages.append(MessageParam(role="user", content=user_input))
 
         with console.status("Waiting for model response...", spinner="dots"):
