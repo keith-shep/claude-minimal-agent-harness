@@ -1,4 +1,5 @@
 import re
+from concurrent.futures import ThreadPoolExecutor
 
 from anthropic.types import MessageParam
 from rich.console import Console
@@ -43,30 +44,43 @@ def find_leaks(reply: str) -> list[str]:
     return sorted({m.group(0).lower() for m in IMPERIAL.finditer(reply)})
 
 
+def run_job(job: tuple[str, int]) -> str:
+    user_input, _run = job
+    return get_reply(user_input, system_prompt)
+
+
 passed = 0
 total = 0
 console = Console()
+
+MAX_WORKERS = 8
+
 for system_prompt in SYSTEM_PROMPTS:
     console.rule(system_prompt[:60])
-    passed = 0
-    total = 0
-    for user_input in TEST_INPUTS:
-        for run in range(1, RUNS + 1):
-            reply = get_reply(user_input, system_prompt)
-            leaks = find_leaks(reply)
-            total += 1
-            if not leaks:
-                passed += 1
-            else:
-                for line in reply.splitlines():
-                    if IMPERIAL.search(line):
-                        highlighted = IMPERIAL.sub(
-                            lambda m: f"[bold red]{m.group(0)}[/]", escape(line)
-                        )
-                        console.print(f"    [dim]>[/] {highlighted}")
-            status = (
-                "[bold green]PASS[/]" if not leaks else f"[bold red]FAIL {leaks}[/]"
-            )
-            console.print(f"\\[{run}/{RUNS}] {status}  {user_input}")
 
-print(f"\nscore: {passed}/{total}")
+    jobs: list[tuple[str, int]] = [
+        (user_input, run) for user_input in TEST_INPUTS for run in range(1, RUNS + 1)
+    ]
+
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as pool:
+        replies = list(pool.map(run_job, jobs))
+
+    passed = 0
+    passed = 0
+    for (user_input, run), reply in zip(jobs, replies):
+        leaks = find_leaks(reply)
+
+        status = "[bold green]PASS[/]" if not leaks else f"[bold red]FAIL {leaks}[/]"
+        console.print(f"\\[{run}/{RUNS}] {status}  {user_input}")
+
+        if not leaks:
+            passed += 1
+        else:
+            for line in reply.splitlines():
+                if IMPERIAL.search(line):
+                    highlighted = IMPERIAL.sub(
+                        lambda m: f"[bold red]{m.group(0)}[/]", escape(line)
+                    )
+                    console.print(f"    [dim]>[/] {highlighted}")
+
+    console.print(f"\nscore: {passed}/{len(jobs)}\n")
