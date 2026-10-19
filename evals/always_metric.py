@@ -13,6 +13,7 @@ TEST_INPUTS = [
 
 IMPERIAL = re.compile(
     r"\b(cups?|oz|ounces?|lbs?|pounds?|sticks? of butter|"
+    r"tsps?|tbsps?|teaspoons?|tablespoons?|"
     r"inch(es)?|quarts?|pints?|fahrenheit)\b|°\s?F\b|\d+\s?F\b",
     re.IGNORECASE,
 )
