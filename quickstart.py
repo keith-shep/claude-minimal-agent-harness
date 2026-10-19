@@ -8,28 +8,28 @@ client = AnthropicClient()
 
 messages: list[MessageParam] = []
 
-user_input = input("You: ")
+while True:
+    user_input = input("user: ")
 
-messages.append(MessageParam(role="user", content=user_input))
+    messages.append(MessageParam(role="user", content=user_input))
 
-response = client.run_inference(messages)
+    response = client.run_inference(messages)
 
-response_message = cast(TextBlock, response.content[0]).text
-print(response_message)
+    response_message = cast(TextBlock, response.content[0]).text
+    messages.append(MessageParam(role="assistant", content=response_message))
+    print("assistant:", response_message)
 
+    # user_input = input("You: ")
+    # messages.extend(
+    #     [
+    #         MessageParam(role="assistant", content=response_message),
+    #         MessageParam(role="user", content=user_input),
+    #     ]
+    # )
 
-user_input = input("You: ")
-messages.extend(
-    [
-        MessageParam(role="assistant", content=response_message),
-        MessageParam(role="user", content=user_input),
-    ]
-)
+    # response = client.run_inference(messages)
 
+    # response_message = cast(TextBlock, response.content[0]).text
+    # print(response_message)
 
-response = client.run_inference(messages)
-
-response_message = cast(TextBlock, response.content[0]).text
-print(response_message)
-
-# print_json(response.model_dump_json(indent=2, exclude_none=True))
+    # print_json(response.model_dump_json(indent=2, exclude_none=True))
