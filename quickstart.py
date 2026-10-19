@@ -1,6 +1,4 @@
-from typing import cast
-
-from anthropic.types import MessageParam, TextBlock
+from anthropic.types import MessageParam
 from rich.console import Console
 from rich.markdown import Markdown
 
@@ -12,13 +10,15 @@ console = Console()
 messages: list[MessageParam] = []
 
 system_prompt = console.input("[bold yellow]system (leave blank for no):[/] ")
-user_input = console.input("[bold cyan]user:[/] ")
 while True:
+    user_input = console.input("[bold cyan]user:[/] ")
     messages.append(MessageParam(role="user", content=user_input))
 
     response = client.run_inference(messages)
 
-    response_message = cast(TextBlock, response.content[0]).text
+    response_message = "".join(
+        block.text for block in response.content if block.type == "text"
+    )
     messages.append(MessageParam(role="assistant", content=response_message))
     console.print("[bold green]assistant: [/]", end="")
     label = "assistant: "
