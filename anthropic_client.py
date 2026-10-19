@@ -3,6 +3,7 @@ import os
 import anthropic
 from anthropic.types import Message, MessageParam
 from dotenv import load_dotenv
+from rich.console import Console
 
 from enums.model import Model
 
@@ -14,11 +15,23 @@ class AnthropicClient(anthropic.Anthropic):
         super().__init__(api_key=os.getenv("API_KEY"))
 
     def run_inference(
-        self, messages: list[MessageParam], system_prompt: str = ""
+        self, messages: list[MessageParam], system_prompt: str = "", ttys: str = ""
     ) -> Message:
-        return self.messages.create(
+
+        response = self.messages.create(
             model=Model.HAIKU,
             max_tokens=1000,
             messages=messages,
             system=system_prompt,
         )
+        if ttys:
+            with open(ttys, "w") as tty:
+                console = Console(file=tty, force_terminal=True)
+                console.rule("request")
+                console.print_json(
+                    data={"system": system_prompt, "messages": messages}, default=str
+                )
+                console.rule("response")
+                console.print_json(response.model_dump_json(exclude_none=True))
+
+        return response
