@@ -2,6 +2,7 @@ import anthropic
 import os
 from dotenv import load_dotenv
 from rich import print_json
+from enums.role import Role
 
 load_dotenv() 
 
@@ -12,8 +13,8 @@ message = client.messages.create(
     max_tokens=1000,
     messages=[
         {
-            "role": "user",
-            "content": "hello world",
+            "role": Role.USER,
+            "content": "what is the answer to life, the universe and everything",
         }
     ],
 )
