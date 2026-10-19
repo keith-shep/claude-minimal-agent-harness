@@ -30,10 +30,11 @@ try:
         user_input = console.input("[bold cyan]user:[/] ")
         messages.append(MessageParam(role="user", content=user_input))
 
-        response = client.run_inference(
-            messages,
-            system_prompt,
-        )
+        with console.status("Waiting for model response...", spinner="dots"):
+            response = client.run_inference(
+                messages,
+                system_prompt,
+            )
 
         response_message = "".join(
             block.text for block in response.content if block.type == "text"
