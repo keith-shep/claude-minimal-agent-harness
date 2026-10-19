@@ -16,14 +16,13 @@ messages = [
     }
 ]
 
-message = client.messages.create(
+response = client.messages.create(
     model=Model.HAIKU,
     max_tokens=1000,
     messages=messages,
 )
 
-print_json(message.model_dump_json(indent=2, exclude_none=True))
+print_json(response.model_dump_json(indent=2, exclude_none=True))
 
-# for block in message.content:
-#     if block.type == "text":
-#         print(block.text)
+
+print(response.content[0].text)
