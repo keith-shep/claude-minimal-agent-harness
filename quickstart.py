@@ -11,12 +11,8 @@ load_dotenv()
 
 client = anthropic.Anthropic(api_key=os.getenv("API_KEY"))
 
-messages: list[MessageParam] = [
-    {
-        "role": 'user',
-        "content": "what is the answer to life, the universe and everything",
-    }
-]
+messages: list[MessageParam] = []
+messages.append(MessageParam(role='user', content="what is the answer to life, the universe and everything"))
 
 response = client.messages.create(
     model=Model.HAIKU,
