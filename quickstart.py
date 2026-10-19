@@ -20,7 +20,7 @@ console.print()
 console.print("[green]Setting up...")
 console.print("[green]Press Ctrl+C to end")
 try:
-    system_prompt = console.input("[bold yellow]system (leave blank for no):[/] ")
+    system_prompt = console.input("[bold yellow]system prompt (enter for none):[/] ")
     client = AnthropicClient()
 
     messages: list[MessageParam] = []
