@@ -1,5 +1,4 @@
 from rich import print_json
-from enums.model import Model
 from anthropic.types import MessageParam
 from typing import cast
 from anthropic.types import TextBlock
