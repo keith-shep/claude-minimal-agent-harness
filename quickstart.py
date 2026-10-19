@@ -10,7 +10,7 @@ load_dotenv()
 client = anthropic.Anthropic(api_key=os.getenv("API_KEY"))
 
 message = client.messages.create(
-    model=Model.HAIKU,
+    model=Model.SONNET,
     max_tokens=1000,
     messages=[
         {
