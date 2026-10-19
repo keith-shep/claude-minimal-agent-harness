@@ -4,8 +4,6 @@ from typing import cast
 from anthropic.types import TextBlock
 from anthropic_client import AnthropicClient
 
-
-
 client = AnthropicClient()
 
 messages: list[MessageParam] = []
