@@ -9,19 +9,22 @@ from anthropic_client import AnthropicClient
 
 SYSTEM_PROMPTS = [
     "Use metric units only. Give small amounts in ml or grams, never teaspoons or tablespoons.",
-    "Use metric units only: grams for weight, ml for volume, °C for temperature, cm for size. Don't add notes about measurements.",
-    (
-        "Use metric units only. Write ingredients like this:\n"
-        "- 200 g flour\n"
-        "- 10 g baking powder\n"
-        "- 5 ml vanilla extract\n"
-        "Don't add notes about measurements."
-    ),
+    # "Use metric units only: grams for weight, ml for volume, °C for temperature, cm for size. Don't add notes about measurements.",
+    # (
+    #     "Use metric units only. Write ingredients like this:\n"
+    #     "- 200 g flour\n"
+    #     "- 10 g baking powder\n"
+    #     "- 5 ml vanilla extract\n"
+    #     "Don't add notes about measurements."
+    # ),
+    # "Use metric units only. Give small amounts in ml or grams, never teaspoons or tablespoons. Don't add notes or explanations about measurements. Instead of saying 2 tbsp milk (about 30 ml), just say 30ml milk",
 ]
 RUNS = 10
 
 TEST_INPUTS = [
     "give me a cake recipe",
+    "give me a cocktail recipe",
+    "give me a bread recipe",
 ]
 
 IMPERIAL = re.compile(
