@@ -1,7 +1,9 @@
 import os
+from collections.abc import Callable
 
 import anthropic
-from anthropic.types import Message, MessageParam, ToolParam
+from anthropic.lib.tools import BetaFunctionTool
+from anthropic.types.beta import BetaMessage, BetaMessageParam
 from dotenv import load_dotenv
 from rich.console import Console
 
@@ -20,13 +22,13 @@ class AnthropicClient(anthropic.Anthropic):
 
     def run_inference(
         self,
-        messages: list[MessageParam],
+        messages: list[BetaMessageParam],
         system_prompt: str = "",
         effort_level: Effort = "medium",
-        tools: list[ToolParam] | None = None,
-    ) -> Message:
+        tools: list[BetaFunctionTool[Callable[..., str]]] | None = None,
+    ) -> BetaMessage:
 
-        response = self.messages.create(
+        runner = self.beta.messages.tool_runner(
             model=Model.HAIKU,
             max_tokens=1000,
             messages=messages,
@@ -34,6 +36,7 @@ class AnthropicClient(anthropic.Anthropic):
             output_config={"effort": effort_level},
             tools=tools or [],
         )
+        response = runner.until_done()
         if self.requests_ttys:
             with open(self.requests_ttys, "w") as tty:
                 console = Console(file=tty, force_terminal=True)

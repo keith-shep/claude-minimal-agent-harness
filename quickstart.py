@@ -1,11 +1,11 @@
 import argparse
 
-from anthropic.types import MessageParam, ToolResultBlockParam
+from anthropic.types.beta import BetaMessageParam
 from rich.console import Console
 from rich.markdown import Markdown
 
 from anthropic_client import AnthropicClient
-from tools.registry import TOOLS, run_tool
+from tools.registry import TOOLS
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -25,40 +25,21 @@ console.print("[green]Press Ctrl+C to end")
 try:
     system_prompt = console.input("[bold yellow]system prompt (enter for none):[/] ")
 
-    messages: list[MessageParam] = []
+    messages: list[BetaMessageParam] = []
 
     while True:
         user_input = console.input("[bold cyan]user:[/] ")
         if not user_input:
             continue
-        messages.append(MessageParam(role="user", content=user_input))
+        messages.append(BetaMessageParam(role="user", content=user_input))
 
         with console.status("Waiting for model response...", spinner="dots"):
             response = client.run_inference(messages, system_prompt, "medium", TOOLS)
 
-            while response.stop_reason == "tool_use":
-                messages.append({"role": "assistant", "content": response.content})
-
-                results: list[ToolResultBlockParam] = []
-                for block in response.content:
-                    if block.type == "tool_use":
-                        results.append(
-                            {
-                                "type": "tool_result",
-                                "tool_use_id": block.id,
-                                "content": run_tool(block.name, block.input),
-                            }
-                        )
-
-                messages.append({"role": "user", "content": results})
-                response = client.run_inference(
-                    messages, system_prompt, "medium", TOOLS
-                )
-
         response_message = "".join(
             block.text for block in response.content if block.type == "text"
         )
-        messages.append(MessageParam(role="assistant", content=response_message))
+        messages.append(BetaMessageParam(role="assistant", content=response_message))
         console.print("[bold green]assistant: [/]", end="")
         label = "assistant: "
         console.print(Markdown(response_message), width=console.width - len(label))
