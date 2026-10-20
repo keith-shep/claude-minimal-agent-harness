@@ -7,8 +7,8 @@ CONVERT_METRIC_TOOL: ToolParam = {
         "type": "object",
         "properties": {
             "amount": {"type": "number"},
-            "source_unit": {"type": "string", "enum": ["g"]},
-            "destination_unit": {"type": "string", "enum": ["kg"]},
+            "source_unit": {"type": "string", "enum": ["g", "kg"]},
+            "destination_unit": {"type": "string", "enum": ["kg", "g"]},
         },
         "required": ["amount", "source_unit", "destination_unit"],
     },
@@ -21,4 +21,6 @@ def convert_metric(
     print("convert_metric")
     if source_unit == "g" and destination_unit == "kg":
         return amount / 1000
+    if source_unit == "kg" and destination_unit == "g":
+        return amount * 1000
     return None
