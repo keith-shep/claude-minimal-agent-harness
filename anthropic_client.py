@@ -1,7 +1,7 @@
 import os
 
 import anthropic
-from anthropic.types import Message, MessageParam
+from anthropic.types import Message, MessageParam, ToolParam
 from dotenv import load_dotenv
 from rich.console import Console
 
@@ -14,6 +14,7 @@ load_dotenv()
 class AnthropicClient(anthropic.Anthropic):
     def __init__(self, requests_ttys: str = "", response_ttys: str = "") -> None:
         super().__init__(api_key=os.getenv("API_KEY"))
+        print(os.getenv("API_KEY"))
         self.requests_ttys: str = requests_ttys
         self.responses_ttys: str = response_ttys
 
@@ -22,6 +23,7 @@ class AnthropicClient(anthropic.Anthropic):
         messages: list[MessageParam],
         system_prompt: str = "",
         effort_level: Effort = "medium",
+        tools: list[ToolParam] | None = None,
     ) -> Message:
 
         response = self.messages.create(
@@ -30,6 +32,7 @@ class AnthropicClient(anthropic.Anthropic):
             messages=messages,
             system=system_prompt,
             output_config={"effort": effort_level},
+            tools=tools or [],
         )
         if self.requests_ttys:
             with open(self.requests_ttys, "w") as tty:

@@ -1,10 +1,11 @@
 import argparse
 
-from anthropic.types import MessageParam
+from anthropic.types import MessageParam, ToolResultBlockParam
 from rich.console import Console
 from rich.markdown import Markdown
 
 from anthropic_client import AnthropicClient
+from tools.registry import TOOLS, run_tool
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -33,10 +34,26 @@ try:
         messages.append(MessageParam(role="user", content=user_input))
 
         with console.status("Waiting for model response...", spinner="dots"):
-            response = client.run_inference(
-                messages,
-                system_prompt,
-            )
+            response = client.run_inference(messages, system_prompt, "medium", TOOLS)
+
+            while response.stop_reason == "tool_use":
+                messages.append({"role": "assistant", "content": response.content})
+
+                results: list[ToolResultBlockParam] = []
+                for block in response.content:
+                    if block.type == "tool_use":
+                        results.append(
+                            {
+                                "type": "tool_result",
+                                "tool_use_id": block.id,
+                                "content": run_tool(block.name, block.input),
+                            }
+                        )
+
+                messages.append({"role": "user", "content": results})
+                response = client.run_inference(
+                    messages, system_prompt, "medium", TOOLS
+                )
 
         response_message = "".join(
             block.text for block in response.content if block.type == "text"
