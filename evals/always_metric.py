@@ -39,7 +39,7 @@ client = AnthropicClient()
 
 def get_reply(user_input: str, system_prompt: str) -> str:
     messages: list[MessageParam] = [MessageParam(role="user", content=user_input)]
-    response = client.run_inference(messages, system_prompt)
+    response = client.run_inference(messages, system_prompt, "high")
     return "".join(b.text for b in response.content if b.type == "text")
 
 
