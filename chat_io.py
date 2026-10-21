@@ -7,13 +7,14 @@ from rich.theme import Theme
 
 from enums.role import Role
 
+SYSTEM_PROMPT_STYLE = "system_prompt"
 SYSTEM_PROMPT_LABEL = "system prompt (enter for none): "
 USER_LABEL = f"{Role.USER}: "
 ASSISTANT_LABEL = f"{Role.ASSISTANT}: "
 
 theme = Theme(
     {
-        "system_prompt": "bold yellow",
+        SYSTEM_PROMPT_STYLE: "bold yellow",
         Role.USER: "bold cyan",
         Role.ASSISTANT: "bold green",
     }
@@ -29,7 +30,7 @@ def show_intro() -> None:
 
 
 def ask_system_prompt() -> str:
-    return console.input(f"[system_prompt]{SYSTEM_PROMPT_LABEL}[/]")
+    return console.input(f"[{SYSTEM_PROMPT_STYLE}]{SYSTEM_PROMPT_LABEL}[/]")
 
 
 def ask_user() -> str:
