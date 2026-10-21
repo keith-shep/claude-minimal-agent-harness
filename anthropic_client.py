@@ -16,7 +16,6 @@ load_dotenv()
 class AnthropicClient(anthropic.Anthropic):
     def __init__(self, requests_ttys: str = "", response_ttys: str = "") -> None:
         super().__init__(api_key=os.getenv("ANTHROPIC_API_KEY"))
-        print(os.getenv("ANTHROPIC_API_KEY"))
         self.requests_ttys: str = requests_ttys
         self.responses_ttys: str = response_ttys
 
