@@ -44,7 +44,7 @@ try:
         )
         messages.append(BetaMessageParam(role="assistant", content=response_message))
         chat_io.show_assistant(response_message)
-except (KeyboardInterrupt, EOFError):
+except (KeyboardInterrupt, EOFError, SystemExit):
     if args.debug:
         chat_io.show_debug_closing()
     chat_io.show_goodbye()
