@@ -2,6 +2,8 @@ from rich.console import Console
 from rich.markdown import Markdown
 from rich.status import Status
 
+SYSTEM_PROMPT_LABEL = "system prompt (enter for none): "
+USER_LABEL = "user: "
 ASSISTANT_LABEL = "assistant: "
 
 console = Console()
@@ -14,11 +16,11 @@ def show_intro() -> None:
 
 
 def ask_system_prompt() -> str:
-    return console.input("[bold yellow]system prompt (enter for none):[/] ")
+    return console.input(f"[bold yellow]{SYSTEM_PROMPT_LABEL}[/]")
 
 
 def ask_user() -> str:
-    return console.input("[bold cyan]user:[/] ")
+    return console.input(f"[bold cyan]{USER_LABEL}[/]")
 
 
 def waiting() -> Status:
