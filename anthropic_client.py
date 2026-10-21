@@ -7,15 +7,13 @@ from anthropic.types.beta import BetaMessage, BetaMessageParam
 
 from effort import Effort
 from enums.model import Model
-from modules.tty_logger import tty_logger
+from modules.tty_logger import TtyLog, tty_logger
 
 
 class AnthropicClient(anthropic.Anthropic):
-    def __init__(
-        self, requests_tty: str | None = None, responses_tty: str | None = None
-    ) -> None:
+    def __init__(self, log: TtyLog | None = None) -> None:
         super().__init__(api_key=os.getenv("ANTHROPIC_API_KEY"))
-        self.log = tty_logger(request=requests_tty, response=responses_tty)
+        self.log = log or tty_logger()
 
     def run_inference(
         self,

@@ -4,18 +4,23 @@ from anthropic.types.beta import BetaMessageParam
 
 from anthropic_client import AnthropicClient
 from modules import chat_io
+from modules.tty_logger import open_terminal, tty_logger
 from tools.registry import TOOLS
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
-    "--requests-tty", help="terminal device for debug output, e.g. /dev/ttys008"
-)
-parser.add_argument(
-    "--responses-tty", help="terminal device for debug output, e.g. /dev/ttys009"
+    "--debug",
+    action="store_true",
+    help="open Terminal windows showing requests and responses",
 )
 args = parser.parse_args()
 
-client = AnthropicClient(args.requests_tty, args.responses_tty)
+log = (
+    tty_logger(request=open_terminal("request"), response=open_terminal("response"))
+    if args.debug
+    else None
+)
+client = AnthropicClient(log=log)
 
 chat_io.show_intro()
 try:
