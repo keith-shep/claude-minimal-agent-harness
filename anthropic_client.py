@@ -4,10 +4,10 @@ from collections.abc import Callable
 import anthropic
 from anthropic.lib.tools import BetaFunctionTool
 from anthropic.types.beta import BetaMessage, BetaMessageParam
-from rich.console import Console
 
 from effort import Effort
 from enums.model import Model
+from tty_logger import log_to_tty
 
 
 class AnthropicClient(anthropic.Anthropic):
@@ -33,18 +33,15 @@ class AnthropicClient(anthropic.Anthropic):
             tools=tools or [],
         )
         response = runner.until_done()
-        if self.requests_ttys:
-            with open(self.requests_ttys, "w") as tty:
-                console = Console(file=tty, force_terminal=True)
-                console.rule("request")
-                console.print_json(
-                    data={"system": system_prompt, "messages": messages}, default=str
-                )
-
-        if self.responses_ttys:
-            with open(self.responses_ttys, "w") as tty:
-                console = Console(file=tty, force_terminal=True)
-                console.rule("response")
-                console.print_json(response.model_dump_json(exclude_none=True))
+        log_to_tty(
+            self.requests_ttys,
+            "request",
+            {"system": system_prompt, "messages": messages},
+        )
+        log_to_tty(
+            self.responses_ttys,
+            "response",
+            response.model_dump(mode="json", exclude_none=True),
+        )
 
         return response
