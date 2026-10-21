@@ -4,13 +4,10 @@ from collections.abc import Callable
 import anthropic
 from anthropic.lib.tools import BetaFunctionTool
 from anthropic.types.beta import BetaMessage, BetaMessageParam
-from dotenv import load_dotenv
 from rich.console import Console
 
 from effort import Effort
 from enums.model import Model
-
-load_dotenv()
 
 
 class AnthropicClient(anthropic.Anthropic):
