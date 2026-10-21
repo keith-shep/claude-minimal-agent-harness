@@ -5,15 +5,17 @@ from rich.table import Table
 from rich.text import Text
 from rich.theme import Theme
 
+from enums.role import Role
+
 SYSTEM_PROMPT_LABEL = "system prompt (enter for none): "
-USER_LABEL = "user: "
-ASSISTANT_LABEL = "assistant: "
+USER_LABEL = f"{Role.USER}: "
+ASSISTANT_LABEL = f"{Role.ASSISTANT}: "
 
 theme = Theme(
     {
-        "system": "bold yellow",
-        "user": "bold cyan",
-        "assistant": "bold green",
+        "system_prompt": "bold yellow",
+        Role.USER: "bold cyan",
+        Role.ASSISTANT: "bold green",
     }
 )
 
@@ -27,11 +29,11 @@ def show_intro() -> None:
 
 
 def ask_system_prompt() -> str:
-    return console.input(f"[system]{SYSTEM_PROMPT_LABEL}[/]")
+    return console.input(f"[system_prompt]{SYSTEM_PROMPT_LABEL}[/]")
 
 
 def ask_user() -> str:
-    return console.input(f"[user]{USER_LABEL}[/]")
+    return console.input(f"[{Role.USER}]{USER_LABEL}[/]")
 
 
 def waiting() -> Status:
@@ -42,7 +44,7 @@ def show_assistant(text: str) -> None:
     grid = Table.grid()
     grid.add_column(no_wrap=True)
     grid.add_column()
-    grid.add_row(Text(ASSISTANT_LABEL, style="assistant"), Markdown(text))
+    grid.add_row(Text(ASSISTANT_LABEL, style=Role.ASSISTANT), Markdown(text))
     console.print(grid)
     console.print()
 
