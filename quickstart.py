@@ -2,8 +2,8 @@ import argparse
 
 from anthropic.types.beta import BetaMessageParam
 
-import chat_io
 from anthropic_client import AnthropicClient
+from modules import chat_io
 from tools.registry import TOOLS
 
 parser = argparse.ArgumentParser()

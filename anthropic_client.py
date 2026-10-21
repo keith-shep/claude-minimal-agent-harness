@@ -7,7 +7,7 @@ from anthropic.types.beta import BetaMessage, BetaMessageParam
 
 from effort import Effort
 from enums.model import Model
-from tty_logger import log_to_tty
+from modules.tty_logger import log_to_tty
 
 
 class AnthropicClient(anthropic.Anthropic):
