@@ -15,14 +15,16 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-log = (
-    tty_logger(request=open_terminal("request"), response=open_terminal("response"))
-    if args.debug
-    else None
-)
+chat_io.show_intro()
+
+log = None
+if args.debug:
+    chat_io.show_debug_opening()
+    log = tty_logger(
+        request=open_terminal("request"), response=open_terminal("response")
+    )
 client = AnthropicClient(log=log)
 
-chat_io.show_intro()
 try:
     system_prompt = chat_io.ask_system_prompt()
 
@@ -43,4 +45,6 @@ try:
         messages.append(BetaMessageParam(role="assistant", content=response_message))
         chat_io.show_assistant(response_message)
 except (KeyboardInterrupt, EOFError):
+    if args.debug:
+        chat_io.show_debug_closing()
     chat_io.show_goodbye()

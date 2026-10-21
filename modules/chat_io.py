@@ -29,6 +29,14 @@ def show_intro() -> None:
     console.print("[green]Press Ctrl+C to end")
 
 
+def show_debug_opening() -> None:
+    console.print("[dim]Debug: opening request and response terminals...")
+
+
+def show_debug_closing() -> None:
+    console.print("[dim]Debug: closing request and response terminals...")
+
+
 def ask_system_prompt() -> str:
     return console.input(f"[{SYSTEM_PROMPT_STYLE}]{SYSTEM_PROMPT_LABEL}[/]")
 
