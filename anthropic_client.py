@@ -7,14 +7,15 @@ from anthropic.types.beta import BetaMessage, BetaMessageParam
 
 from effort import Effort
 from enums.model import Model
-from modules.tty_logger import log_to_tty
+from modules.tty_logger import tty_logger
 
 
 class AnthropicClient(anthropic.Anthropic):
-    def __init__(self, requests_ttys: str = "", response_ttys: str = "") -> None:
+    def __init__(
+        self, requests_tty: str | None = None, responses_tty: str | None = None
+    ) -> None:
         super().__init__(api_key=os.getenv("ANTHROPIC_API_KEY"))
-        self.requests_ttys: str = requests_ttys
-        self.responses_ttys: str = response_ttys
+        self.log = tty_logger(request=requests_tty, response=responses_tty)
 
     def run_inference(
         self,
@@ -23,6 +24,7 @@ class AnthropicClient(anthropic.Anthropic):
         effort_level: Effort = "medium",
         tools: list[BetaFunctionTool[Callable[..., str]]] | None = None,
     ) -> BetaMessage:
+        self.log(request={"system": system_prompt, "messages": messages})
 
         runner = self.beta.messages.tool_runner(
             model=Model.HAIKU,
@@ -33,15 +35,6 @@ class AnthropicClient(anthropic.Anthropic):
             tools=tools or [],
         )
         response = runner.until_done()
-        log_to_tty(
-            self.requests_ttys,
-            "request",
-            {"system": system_prompt, "messages": messages},
-        )
-        log_to_tty(
-            self.responses_ttys,
-            "response",
-            response.model_dump(mode="json", exclude_none=True),
-        )
+        self.log(response=response)
 
         return response
