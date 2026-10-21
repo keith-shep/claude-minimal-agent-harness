@@ -12,7 +12,9 @@ from modules.tty_logger import TtyLog, tty_logger
 
 class AnthropicClient(anthropic.Anthropic):
     def __init__(self, log: TtyLog | None = None) -> None:
-        super().__init__(api_key=os.getenv("ANTHROPIC_API_KEY"))
+        if not os.getenv("ANTHROPIC_API_KEY"):
+            raise RuntimeError("ANTHROPIC_API_KEY is not set")
+        super().__init__()
         self.log = log or tty_logger()
 
     def run_inference(
