@@ -2,7 +2,7 @@ import argparse
 
 from anthropic.types.beta import BetaMessageParam
 
-import terminal
+import chat_io
 from anthropic_client import AnthropicClient
 from tools.registry import TOOLS
 
@@ -17,25 +17,25 @@ args = parser.parse_args()
 
 client = AnthropicClient(args.requests_tty, args.responses_tty)
 
-terminal.show_intro()
+chat_io.show_intro()
 try:
-    system_prompt = terminal.ask_system_prompt()
+    system_prompt = chat_io.ask_system_prompt()
 
     messages: list[BetaMessageParam] = []
 
     while True:
-        user_input = terminal.ask_user()
+        user_input = chat_io.ask_user()
         if not user_input:
             continue
         messages.append(BetaMessageParam(role="user", content=user_input))
 
-        with terminal.waiting():
+        with chat_io.waiting():
             response = client.run_inference(messages, system_prompt, "medium", TOOLS)
 
         response_message = "".join(
             block.text for block in response.content if block.type == "text"
         )
         messages.append(BetaMessageParam(role="assistant", content=response_message))
-        terminal.show_assistant(response_message)
+        chat_io.show_assistant(response_message)
 except (KeyboardInterrupt, EOFError):
-    terminal.show_goodbye()
+    chat_io.show_goodbye()
